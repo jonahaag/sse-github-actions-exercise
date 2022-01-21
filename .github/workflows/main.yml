@@ -1,0 +1,50 @@
+name: check-test-cover
+on: [push]
+jobs:
+  style_check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8.10'      
+      - name: "Install style checker"
+        run: pip install --user black
+      - name: "Run style check"
+        run: black --check .  
+  test:
+    runs-on: ubuntu-latest
+    needs: style_check
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8.10'
+      - name: "Install pytest and coverage"
+        run: pip install --user pytest coverage matplotlib numpy
+      - name: "Run pytest using coverage"
+        run: coverage run -m pytest
+      - name: 'Upload coverage information'
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-info
+          path: .coverage
+          retention-days: 1
+  coverage_report:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8.10'
+      - name: "Install pytest and coverage"
+        run: pip install --user coverage
+      - name: "Create coverage report"
+        run: coverage report && coverage xml
+      - name: 'Upload coverage.xml'
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-xml
+          path: coverage.xml
+          retention-days: 14
