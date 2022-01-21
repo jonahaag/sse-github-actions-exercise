@@ -41,7 +41,8 @@ jobs:
       - name: "Install pytest and coverage"
         run: pip install --user coverage
       - name: "Create coverage report"
-        run: coverage report && coverage xml
+        run: coverage report
+        run: coverage xml
       - name: 'Upload coverage.xml'
         uses: actions/upload-artifact@v2
         with:
