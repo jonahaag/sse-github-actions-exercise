@@ -24,7 +24,7 @@ jobs:
         run: pip install --user pytest coverage matplotlib numpy
       - name: "Run pytest using coverage"
         run: coverage run -m pytest
-      - name: 'Upload coverage information'
+      - name: "Upload coverage information"
         uses: actions/upload-artifact@v2
         with:
           name: coverage-info
@@ -40,6 +40,10 @@ jobs:
           python-version: '3.8.10'
       - name: "Install pytest and coverage"
         run: pip install --user coverage
+      - name: "Download coverage information"
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage-info
       - name: "Create coverage report"
         run: coverage report
       - name: "Create coverage xml"
